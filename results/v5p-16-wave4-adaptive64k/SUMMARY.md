@@ -1,5 +1,10 @@
 # `tencent/HunyuanImage-3.0-Instruct` & `-Distil` (83B-A13B MoE) Serving on Cloud TPU `v5p` & `v7x` — Slice `v5p-16-wave4-adaptive64k`
 
+> [!IMPORTANT]
+> **Benchmark Scope & Measurement Methodology**
+> - **Stage 1 CoT & Stage 2 Diffusion TPU Compute (`VECTORIZED_GROUPED_MM` / `COMPILED_VECTORIZED_GROUPED_MM`):** **Local-Shard Layer-Scaled 64-Expert MoE + GQA Operator Microbenchmark** (`run_child_hy3_worker` in [`scripts/run_hunyuan_image3_tpu_bench.py`](../../scripts/run_hunyuan_image3_tpu_bench.py)) loading `165 GiB / tp_ep_size` real `tencent/HunyuanImage-3.0` `safetensors` shards onto HBM and timing `4` measured prefill/diffusion layers (`× 8 -> 32L`) plus `8` measured CoT decode layers (`× 4 -> 32L`) over `64 // tp_ep_size = 16` local experts (`torch.bmm`) **excluding inter-chip EP `AllToAll` / TP `AllReduce` collectives**.
+> - **Disaggregated Image Encoding & TI2I Preprocessing (`POST /encode_image`, `POST /preprocess_vision`):** **100% Real End-to-End HTTP + AVX-512 Pillow `PNG`/`WebP` Encoding & Vision Preprocessing** against `multimodal-cpu-offload-svc:8090` (`c3-standard-44`), achieving **`1.09x–1.29x` synchronous PNG speedup** on `v5p` while isolating TPU host CPUs from Pillow GIL contention.
+
 ### Slice `v5p-16-wave4-adaptive64k` (`v5p`, `TP/EP=4 × DP=4`, `20` Verified Benchmark Points)
 
 - **Raw Artifacts:** [`results/v5p-16-wave4-adaptive64k/SUMMARY.md`](./SUMMARY.md) · [`results/v5p-16-wave4-adaptive64k/summary.json`](./summary.json) *(updated `2026-11-02T21:11:12.964757+00:00`)*
