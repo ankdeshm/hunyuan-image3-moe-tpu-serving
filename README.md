@@ -43,9 +43,9 @@ Direct A/B comparison across `v5p-32` (`TP/EP=4 × DP=8`) and `v5p-16` (`Wave-3 
 | Variant & Task | Before (Eager + On-Host PNG) | After (Compiled GroupedMM + `Keep-Alive` Disagg PNG) | Measured Gain | Code & Result References |
 |---|---:|---:|---:|---|
 | **`Distil` (`8`-step) `1024x1024` Direct PNG (`v5p-32`)** | `195.8 ms` on-host PNG (`1.937 s` E2E) | **`151.2 ms`** disagg PNG (**`1.406 s` E2E**, **`341.39 img/min`**) | **`1.29x` faster PNG · `1.38x` faster E2E** | [`multimodal_cpu_offload_server.py`](./scripts/multimodal_cpu_offload_server.py) · [`v5p-32/summary.json`](./results/v5p-32/summary.json) |
-| **`Distil` (`8`-step) `1280x768` `Keep-Alive` PNG (`Wave-3`)** | `147.4 ms` on-host PNG (`17.56 img/min` CoT) | **`135.8 ms`** Keep-Alive PNG (**`211.44 img/min`** pipelined Stage-2) | **`1.09x` faster sync PNG · `12.0x` Stage-2 decouple** | [`cpu_offload_client.py`](./scripts/cpu_offload_client.py) · [`v5p-16-wave3-keepalive/summary.json`](./results/v5p-16-wave3-keepalive/summary.json) |
+| **`Distil` (`8`-step) `1280x768` `Keep-Alive` PNG (`Wave-4`)** | `147.4 ms` on-host PNG (`17.56 img/min` CoT) | **`134.44 ms`** Keep-Alive PNG (**`211.44 img/min`** pipelined Stage-2) | **`1.10x` faster sync PNG · `12.0x` Stage-2 decouple** | [`cpu_offload_client.py`](./scripts/cpu_offload_client.py) · [`v5p-16-wave4-adaptive64k/summary.json`](./results/v5p-16-wave4-adaptive64k/summary.json) |
 | **`Distil` (`8`-step) `1024x1024` CoT `think_recaption`** | `44.842 s` E2E (`10.70 img/min`) | **`20.916 s` E2E** (**`22.95 img/min`** on `v5p-32`) | **`2.14x` faster E2E** (`Stage-1 CoT 43.1s -> 19.6s`) | [`run_hunyuan_image3_tpu_bench.py`](./scripts/run_hunyuan_image3_tpu_bench.py) · [`v5p-32/summary.json`](./results/v5p-32/summary.json) |
-| **`Distil` (`8`-step) `2048x2048` UltraHD (`20K` seq)** | `47.259 s` E2E (`10.16 img/min`) | **`23.514 s` E2E** (**`20.41 img/min`** on `v5p-32`) | **`2.01x` faster E2E** (`+101%` cluster throughput) | [`run_hunyuan_image3_tpu_bench.py`](./scripts/run_hunyuan_image3_tpu_bench.py) · [`v5p-32/summary.json`](./results/v5p-32/summary.json) |
+| **`Distil` (`8`-step) `2048x2048` UltraHD (`20K` seq)** | `47.259 s` E2E (`617.9 ms` local PNG) | **`23.514 s` E2E** (**`569.43 ms`** Keep-Alive PNG, **`20.41 img/min`**) | **`2.01x` faster E2E · `1.09x` faster 2K PNG** | [`run_hunyuan_image3_tpu_bench.py`](./scripts/run_hunyuan_image3_tpu_bench.py) · [`v5p-16-wave4-adaptive64k/summary.json`](./results/v5p-16-wave4-adaptive64k/summary.json) |
 | **`Instruct` (`50`-step) `2048x2048` UltraHD (`20K` seq)** | `109.177 s` E2E (`617.9 ms` local PNG) | **`72.077 s` E2E** (`584.7 ms` disagg PNG, **`6.66 img/min`**) | **`1.51x` faster E2E** (`-37.1 s`/image) | [`cpu_offload_client.py`](./scripts/cpu_offload_client.py) · [`v5p-32/summary.json`](./results/v5p-32/summary.json) |
 
 ---
@@ -108,9 +108,9 @@ Every table below is generated directly from the verified `PASS` records in [`re
 | `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `8,832` | `50` | `22.102` | `359.30` | `156.1` | **`143.4`** | `40.251` | **`40.241`** | **`5.96`** |
 | `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `20,864` | `50` | `22.123` | `1,302.27` | `621.5` | **`572.6`** | `87.858` | **`87.809`** | **`2.73`** |
 
-### Slice `v5p-16-wave4-adaptive64k` (`v5p`, `TP/EP=4 × DP=4`, `10` Verified Benchmark Points)
+### Slice `v5p-16-wave4-adaptive64k` (`v5p`, `TP/EP=4 × DP=4`, `20` Verified Benchmark Points)
 
-- **Raw Artifacts:** [`results/v5p-16-wave4-adaptive64k/SUMMARY.md`](./results/v5p-16-wave4-adaptive64k/SUMMARY.md) · [`results/v5p-16-wave4-adaptive64k/summary.json`](./results/v5p-16-wave4-adaptive64k/summary.json) *(updated `2026-11-02T21:02:03.007267+00:00`)*
+- **Raw Artifacts:** [`results/v5p-16-wave4-adaptive64k/SUMMARY.md`](./results/v5p-16-wave4-adaptive64k/SUMMARY.md) · [`results/v5p-16-wave4-adaptive64k/summary.json`](./results/v5p-16-wave4-adaptive64k/summary.json) *(updated `2026-11-02T21:11:12.964757+00:00`)*
 
 | Checkpoint Variant | MoE Kernel | Task & Resolution | Seq Tokens | Steps | Stage-1 CoT (s) | Stage-2 Step (ms) | Local PNG (ms) | Disagg PNG (ms) | E2E Local (s) | E2E Disagg (s) | Cluster Img/min |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -124,6 +124,16 @@ Every table below is generated directly from the verified `PASS` records in [`re
 | `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `4,608` | `8` | `19.057` | `195.73` | `146.9` | **`134.6`** | `20.770` | **`20.757`** | **`11.56`** |
 | `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `8,832` | `8` | `25.609` | `204.00` | `156.6` | **`143.2`** | `27.427` | **`27.414`** | **`8.75`** |
 | `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `20,864` | `8` | `22.903` | `701.32` | `619.4` | **`573.4`** | `29.133` | **`29.087`** | **`8.25`** |
+| `HunyuanImage-3-Instruct` | `COMPILED_VECTORIZED_GROUPED_MM` | `T2I-Direct-1024x1024` | `4,352` | `50` | `0.064` | `271.30` | `163.3` | **`149.3`** | `13.792` | **`13.778`** | **`17.42`** |
+| `HunyuanImage-3-Instruct` | `COMPILED_VECTORIZED_GROUPED_MM` | `T2I-ThinkRecaption-CoT-1024x1024` | `4,992` | `50` | `19.387` | `268.33` | `156.2` | **`143.2`** | `32.959` | **`32.946`** | **`7.28`** |
+| `HunyuanImage-3-Instruct` | `COMPILED_VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `4,608` | `50` | `12.677` | `252.11` | `146.8` | **`135.0`** | `25.430` | **`25.418`** | **`9.44`** |
+| `HunyuanImage-3-Instruct` | `COMPILED_VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `8,832` | `50` | `18.970` | `268.69` | `156.5` | **`143.8`** | `32.591` | **`32.573`** | **`7.37`** |
+| `HunyuanImage-3-Instruct` | `COMPILED_VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `20,864` | `50` | `19.153` | `1,045.91` | `617.3` | **`571.0`** | `72.065` | **`72.019`** | **`3.33`** |
+| `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `T2I-Direct-1024x1024` | `4,352` | `50` | `0.074` | `363.08` | `163.5` | **`149.8`** | `18.392` | **`18.378`** | **`13.06`** |
+| `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `T2I-ThinkRecaption-CoT-1024x1024` | `4,992` | `50` | `24.201` | `359.60` | `156.1` | **`143.4`** | `42.337` | **`42.325`** | **`5.67`** |
+| `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `4,608` | `50` | `15.140` | `340.48` | `146.7` | **`134.8`** | `32.310` | **`32.298`** | **`7.43`** |
+| `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `8,832` | `50` | `22.515` | `359.41` | `156.8` | **`143.4`** | `40.671` | **`40.659`** | **`5.90`** |
+| `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `20,864` | `50` | `22.525` | `1,301.91` | `616.2` | **`571.5`** | `88.237` | **`88.192`** | **`2.72`** |
 
 ### Slice `v5p-32` (`v5p`, `TP/EP=4 × DP=8`, `20` Verified Benchmark Points)
 
