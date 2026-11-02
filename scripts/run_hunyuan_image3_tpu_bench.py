@@ -88,6 +88,8 @@ def run_child_hy3_worker(
 ) -> None:
     import torch
     import torch.nn.functional as F
+    from tpu_single_host_setup import _patch_torchtpu_export_multidevice
+    _patch_torchtpu_export_multidevice()
     import torch_tpu  # noqa: F401
     from safetensors import safe_open
 
@@ -95,7 +97,7 @@ def run_child_hy3_worker(
         torch._dynamo.config.cache_size_limit = 64
         torch._dynamo.config.suppress_errors = False
 
-    n_devs = torch.tpu.device_count()
+    n_devs = torch.accelerator.device_count()
     devices = [torch.device(f"tpu:{i}") for i in range(n_devs)]
     dp_per_host = max(1, n_devs // tp_ep_size)
 
@@ -146,7 +148,7 @@ def run_child_hy3_worker(
                             per_core_bytes[slot] += td.numel() * td.element_size()
                 if per_core_bytes[slot] >= target_per_core:
                     break
-    torch.tpu.synchronize()
+    torch.accelerator.synchronize()
     load_sec = time.perf_counter() - t_l0
 
     # Probe hardware FP8 `torch._scaled_mm(..., out_dtype=torch.bfloat16)` support on 128-aligned shapes.
@@ -161,7 +163,7 @@ def run_child_hy3_worker(
                 if isinstance(pout, tuple):
                     pout = pout[0]
                 _ = pout.sum().item()
-                torch.tpu.synchronize()
+                torch.accelerator.synchronize()
                 scaled_mm_mode = cand_mode
                 break
             except Exception:
@@ -346,7 +348,7 @@ def run_child_hy3_worker(
             x_ctxs = [torch.randn((1, prompt_ctx_tok, d_model), device=o["dev"], dtype=torch.bfloat16) * 0.02 for o in dp_ops]
             for o, xc in zip(dp_ops, x_ctxs):
                 _ = _hy3_layer(o, xc, True)
-            torch.tpu.synchronize()
+            torch.accelerator.synchronize()
 
             t_ar0 = time.perf_counter()
             with concurrent.futures.ThreadPoolExecutor(max_workers=dp_per_host) as pool:
@@ -358,7 +360,7 @@ def run_child_hy3_worker(
                     return hc
 
                 list(pool.map(_pre, range(dp_per_host)))
-            torch.tpu.synchronize()
+            torch.accelerator.synchronize()
             cot_prefill_s = (time.perf_counter() - t_ar0) * (n_layers / 4.0)
 
             cot_decode_s = 0.0
@@ -366,7 +368,7 @@ def run_child_hy3_worker(
                 x_toks = [torch.randn((1, 16, d_model), device=o["dev"], dtype=torch.bfloat16) * 0.02 for o in dp_ops]
                 for o, xt in zip(dp_ops, x_toks):
                     _ = _hy3_layer(o, xt, True)
-                torch.tpu.synchronize()
+                torch.accelerator.synchronize()
                 t_d0 = time.perf_counter()
                 with concurrent.futures.ThreadPoolExecutor(max_workers=dp_per_host) as pool:
 
@@ -377,14 +379,14 @@ def run_child_hy3_worker(
                         return hd
 
                     list(pool.map(_dec, range(dp_per_host)))
-                torch.tpu.synchronize()
+                torch.accelerator.synchronize()
                 cot_decode_s = ((time.perf_counter() - t_d0) / 8.0) * n_layers * cot_out_tok
 
             cfg_batch = 1 if diff_steps <= 8 else 2
             x_imgs = [torch.randn((cfg_batch, img_lat_tok + 256, d_model), device=o["dev"], dtype=torch.bfloat16) * 0.02 for o in dp_ops]
             for o, xi in zip(dp_ops, x_imgs):
                 _ = _hy3_layer(o, xi, False)
-            torch.tpu.synchronize()
+            torch.accelerator.synchronize()
 
             t_df0 = time.perf_counter()
             with concurrent.futures.ThreadPoolExecutor(max_workers=dp_per_host) as pool:
@@ -396,7 +398,7 @@ def run_child_hy3_worker(
                     return hi
 
                 list(pool.map(_dif, range(dp_per_host)))
-            torch.tpu.synchronize()
+            torch.accelerator.synchronize()
             per_diff_step_s = (time.perf_counter() - t_df0) * (n_layers / 4.0)
             diff_total_s = per_diff_step_s * diff_steps
             e2e_s = cot_prefill_s + cot_decode_s + diff_total_s
@@ -471,7 +473,7 @@ def run_child_hy3_worker(
                 }
             )
             del x_ctxs, x_imgs
-            torch.tpu.synchronize()
+            torch.accelerator.synchronize()
         except Exception as exc:
             rows.append(
                 {
