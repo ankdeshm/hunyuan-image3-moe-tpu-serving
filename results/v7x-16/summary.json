@@ -1,0 +1,326 @@
+{
+  "updated_at_utc": "2026-11-03T09:42:48.906757+00:00",
+  "models": [
+    "tencent/HunyuanImage-3.0-Instruct-Distil",
+    "tencent/HunyuanImage-3.0-Instruct"
+  ],
+  "slice_name": "v7x-16",
+  "chip_type": "v7x",
+  "num_hosts": 4,
+  "cores_per_host": 8,
+  "cpu_offload_health": {
+    "status": "ok",
+    "hostname": "multimodal-cpu-offload-svc-79c6dc94d7-p6t7k",
+    "cpu_model": "Intel(R) Xeon(R) Platinum 8481C CPU @ 2.70GHz",
+    "vcpus": 44,
+    "avg_video_fps": 259.4,
+    "video_jobs": 25,
+    "video_frames": 2145,
+    "video_encode_s": 8.271,
+    "image_jobs": 146,
+    "images_encoded": 146,
+    "image_encode_s": 33.224,
+    "audio_jobs": 86,
+    "audio_seconds_encoded": 528.0,
+    "audio_encode_s": 0.019,
+    "vision_preproc_jobs": 237,
+    "vision_cams_processed": 722,
+    "vision_preproc_s": 2.028
+  },
+  "stage_infos": {
+    "HunyuanImage-3-Instruct-Distil": {
+      "repo_id": "tencent/HunyuanImage-3.0-Instruct-Distil",
+      "gcs_uri": "gs://YOUR_GCS_BUCKET/models/tencent/HunyuanImage-3-Instruct-Distil",
+      "cached": true
+    },
+    "HunyuanImage-3-Instruct": {
+      "repo_id": "tencent/HunyuanImage-3.0-Instruct",
+      "gcs_uri": "gs://YOUR_GCS_BUCKET/models/tencent/HunyuanImage-3-Instruct",
+      "cached": true
+    }
+  },
+  "manifests": {
+    "HunyuanImage-3-Instruct-Distil": {
+      "dir_name": "HunyuanImage-3-Instruct-Distil",
+      "architectures": [
+        "HunyuanImage3ForCausalMM"
+      ],
+      "num_hidden_layers": 32,
+      "hidden_size": 4096,
+      "num_experts": 64,
+      "max_position_embeddings": 22800,
+      "num_shards": 32,
+      "total_weight_gib": 157.03,
+      "sample_shapes": {
+        "final_layer.model.0.emb_layers.1.bias": [
+          2048
+        ],
+        "final_layer.model.0.emb_layers.1.weight": [
+          2048,
+          4096
+        ],
+        "final_layer.model.0.in_layers.0.bias": [
+          4096
+        ],
+        "final_layer.model.0.in_layers.0.weight": [
+          4096
+        ],
+        "final_layer.model.0.in_layers.2.bias": [
+          1024
+        ],
+        "final_layer.model.0.in_layers.2.weight": [
+          1024,
+          4096,
+          3,
+          3
+        ],
+        "final_layer.model.0.out_layers.0.bias": [
+          1024
+        ],
+        "final_layer.model.0.out_layers.0.weight": [
+          1024
+        ],
+        "final_layer.model.0.out_layers.3.bias": [
+          1024
+        ],
+        "final_layer.model.0.out_layers.3.weight": [
+          1024,
+          1024,
+          3,
+          3
+        ],
+        "final_layer.model.0.skip_connection.bias": [
+          1024
+        ],
+        "final_layer.model.0.skip_connection.weight": [
+          1024,
+          4096,
+          1,
+          1
+        ],
+        "final_layer.model.1.0.bias": [
+          1024
+        ],
+        "final_layer.model.1.0.weight": [
+          1024
+        ],
+        "final_layer.model.1.2.bias": [
+          32
+        ],
+        "final_layer.model.1.2.weight": [
+          32,
+          1024,
+          3,
+          3
+        ]
+      }
+    }
+  },
+  "results": [
+    {
+      "variant": "HunyuanImage-3-Instruct-Distil",
+      "moe_kernel": "VECTORIZED_GROUPED_MM",
+      "compiled": false,
+      "compile_status": "ar=EAGER,diff=EAGER",
+      "fp8_mxu_mode": "SCALAR_SCALE",
+      "precision": "FP8_DYNAMIC",
+      "tp_ep_degree": 8,
+      "dp_per_host": 1,
+      "tpu_cores_detected": 8,
+      "task": "T2I-Direct-1024x1024",
+      "bot_task": "image",
+      "resolution": "1024x1024",
+      "total_sequence_tokens": 4352,
+      "diff_infer_steps": 8,
+      "weight_shard_gib_per_core": 9.92,
+      "weight_load_s": 41.41,
+      "stage1_cot_s": 0.045,
+      "stage2_diff_step_ms": 70.02,
+      "stage2_diff_total_s": 0.56,
+      "e2e_latency_s": 0.605,
+      "offload_health_status": "ok",
+      "offload_ok": true,
+      "local_cpu_png_ms": 118.82,
+      "local_cpu_preproc_ms": 0.0,
+      "disagg_png_rtt_ms": 146.0,
+      "disagg_preproc_rtt_ms": 0.0,
+      "disagg_cpu_rtt_ms": 146.0,
+      "e2e_with_local_cpu_s": 0.724,
+      "e2e_with_disagg_cpu_s": 0.751,
+      "images_per_min_replica": 99.11,
+      "images_per_min_disagg_replica": 79.89,
+      "disagg_stage2_only_images_per_min_replica": 107.11,
+      "status": "PASS",
+      "chip_type": "v7x",
+      "cluster_dp_replicas": 4,
+      "cluster_images_per_min": 396.44,
+      "cluster_disagg_images_per_min": 428.44,
+      "cluster_images_per_min_local_cpu": 331.49,
+      "cluster_images_per_min_disagg": 319.57
+    },
+    {
+      "variant": "HunyuanImage-3-Instruct-Distil",
+      "moe_kernel": "VECTORIZED_GROUPED_MM",
+      "compiled": false,
+      "compile_status": "ar=EAGER,diff=EAGER",
+      "fp8_mxu_mode": "SCALAR_SCALE",
+      "precision": "FP8_DYNAMIC",
+      "tp_ep_degree": 8,
+      "dp_per_host": 1,
+      "tpu_cores_detected": 8,
+      "task": "T2I-ThinkRecaption-CoT-1024x1024",
+      "bot_task": "think_recaption",
+      "resolution": "1024x1024",
+      "total_sequence_tokens": 4992,
+      "diff_infer_steps": 8,
+      "weight_shard_gib_per_core": 9.92,
+      "weight_load_s": 41.41,
+      "stage1_cot_s": 16.674,
+      "stage2_diff_step_ms": 66.33,
+      "stage2_diff_total_s": 0.531,
+      "e2e_latency_s": 17.205,
+      "offload_health_status": "ok",
+      "offload_ok": true,
+      "local_cpu_png_ms": 114.53,
+      "local_cpu_preproc_ms": 0.0,
+      "disagg_png_rtt_ms": 142.76,
+      "disagg_preproc_rtt_ms": 0.0,
+      "disagg_cpu_rtt_ms": 142.76,
+      "e2e_with_local_cpu_s": 17.319,
+      "e2e_with_disagg_cpu_s": 17.347,
+      "images_per_min_replica": 3.49,
+      "images_per_min_disagg_replica": 3.46,
+      "disagg_stage2_only_images_per_min_replica": 113.07,
+      "status": "PASS",
+      "chip_type": "v7x",
+      "cluster_dp_replicas": 4,
+      "cluster_images_per_min": 13.96,
+      "cluster_disagg_images_per_min": 452.28,
+      "cluster_images_per_min_local_cpu": 13.86,
+      "cluster_images_per_min_disagg": 13.84
+    },
+    {
+      "variant": "HunyuanImage-3-Instruct-Distil",
+      "moe_kernel": "VECTORIZED_GROUPED_MM",
+      "compiled": false,
+      "compile_status": "ar=EAGER,diff=EAGER",
+      "fp8_mxu_mode": "SCALAR_SCALE",
+      "precision": "FP8_DYNAMIC",
+      "tp_ep_degree": 8,
+      "dp_per_host": 1,
+      "tpu_cores_detected": 8,
+      "task": "T2I-Wide-1280x768",
+      "bot_task": "think_recaption",
+      "resolution": "1280x768",
+      "total_sequence_tokens": 4608,
+      "diff_infer_steps": 8,
+      "weight_shard_gib_per_core": 9.92,
+      "weight_load_s": 41.41,
+      "stage1_cot_s": 8.956,
+      "stage2_diff_step_ms": 64.79,
+      "stage2_diff_total_s": 0.518,
+      "e2e_latency_s": 9.474,
+      "offload_health_status": "ok",
+      "offload_ok": true,
+      "local_cpu_png_ms": 107.51,
+      "local_cpu_preproc_ms": 0.0,
+      "disagg_png_rtt_ms": 133.78,
+      "disagg_preproc_rtt_ms": 0.0,
+      "disagg_cpu_rtt_ms": 133.78,
+      "e2e_with_local_cpu_s": 9.582,
+      "e2e_with_disagg_cpu_s": 9.608,
+      "images_per_min_replica": 6.33,
+      "images_per_min_disagg_replica": 6.24,
+      "disagg_stage2_only_images_per_min_replica": 115.75,
+      "status": "PASS",
+      "chip_type": "v7x",
+      "cluster_dp_replicas": 4,
+      "cluster_images_per_min": 25.32,
+      "cluster_disagg_images_per_min": 463.0,
+      "cluster_images_per_min_local_cpu": 25.05,
+      "cluster_images_per_min_disagg": 24.98
+    },
+    {
+      "variant": "HunyuanImage-3-Instruct-Distil",
+      "moe_kernel": "VECTORIZED_GROUPED_MM",
+      "compiled": false,
+      "compile_status": "ar=EAGER,diff=EAGER",
+      "fp8_mxu_mode": "SCALAR_SCALE",
+      "precision": "FP8_DYNAMIC",
+      "tp_ep_degree": 8,
+      "dp_per_host": 1,
+      "tpu_cores_detected": 8,
+      "task": "TI2I-MultiImageEdit-2Refs-1024x1024",
+      "bot_task": "think_recaption_ti2i",
+      "resolution": "1024x1024",
+      "total_sequence_tokens": 8832,
+      "diff_infer_steps": 8,
+      "weight_shard_gib_per_core": 9.92,
+      "weight_load_s": 41.41,
+      "stage1_cot_s": 13.569,
+      "stage2_diff_step_ms": 62.47,
+      "stage2_diff_total_s": 0.5,
+      "e2e_latency_s": 14.069,
+      "offload_health_status": "ok",
+      "offload_ok": true,
+      "local_cpu_png_ms": 118.17,
+      "local_cpu_preproc_ms": 20.75,
+      "disagg_png_rtt_ms": 142.81,
+      "disagg_preproc_rtt_ms": 24.37,
+      "disagg_cpu_rtt_ms": 167.18,
+      "e2e_with_local_cpu_s": 14.208,
+      "e2e_with_disagg_cpu_s": 14.236,
+      "images_per_min_replica": 4.26,
+      "images_per_min_disagg_replica": 4.21,
+      "disagg_stage2_only_images_per_min_replica": 120.07,
+      "status": "PASS",
+      "chip_type": "v7x",
+      "cluster_dp_replicas": 4,
+      "cluster_images_per_min": 17.04,
+      "cluster_disagg_images_per_min": 480.28,
+      "cluster_images_per_min_local_cpu": 16.89,
+      "cluster_images_per_min_disagg": 16.86
+    },
+    {
+      "variant": "HunyuanImage-3-Instruct-Distil",
+      "moe_kernel": "VECTORIZED_GROUPED_MM",
+      "compiled": false,
+      "compile_status": "ar=EAGER,diff=EAGER",
+      "fp8_mxu_mode": "SCALAR_SCALE",
+      "precision": "FP8_DYNAMIC",
+      "tp_ep_degree": 8,
+      "dp_per_host": 1,
+      "tpu_cores_detected": 8,
+      "task": "T2I-UltraHD-2048x2048-LongSeq20K",
+      "bot_task": "think_recaption",
+      "resolution": "2048x2048",
+      "total_sequence_tokens": 20864,
+      "diff_infer_steps": 8,
+      "weight_shard_gib_per_core": 9.92,
+      "weight_load_s": 41.41,
+      "stage1_cot_s": 13.336,
+      "stage2_diff_step_ms": 195.58,
+      "stage2_diff_total_s": 1.565,
+      "e2e_latency_s": 14.901,
+      "offload_health_status": "ok",
+      "offload_ok": true,
+      "local_cpu_png_ms": 465.25,
+      "local_cpu_preproc_ms": 0.0,
+      "disagg_png_rtt_ms": 568.39,
+      "disagg_preproc_rtt_ms": 0.0,
+      "disagg_cpu_rtt_ms": 568.39,
+      "e2e_with_local_cpu_s": 15.366,
+      "e2e_with_disagg_cpu_s": 15.469,
+      "images_per_min_replica": 4.03,
+      "images_per_min_disagg_replica": 3.88,
+      "disagg_stage2_only_images_per_min_replica": 38.35,
+      "status": "PASS",
+      "chip_type": "v7x",
+      "cluster_dp_replicas": 4,
+      "cluster_images_per_min": 16.12,
+      "cluster_disagg_images_per_min": 153.4,
+      "cluster_images_per_min_local_cpu": 15.62,
+      "cluster_images_per_min_disagg": 15.51
+    }
+  ]
+}

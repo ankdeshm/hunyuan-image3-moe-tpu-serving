@@ -1,18 +1,15 @@
-# `tencent/HunyuanImage-3.0-Instruct` & `-Distil` (83B-A13B MoE) Serving on Cloud TPU `v5p` & `v7x` — Slice `v7x-8`
+# `tencent/HunyuanImage-3.0-Instruct` & `-Distil` (83B Total / 13B Active 64-Expert MoE) — `v7x-8` (`v7x`)
 
-> [!IMPORTANT]
-> **Benchmark Scope & Measurement Methodology**
-> - **Stage 1 CoT & Stage 2 Diffusion TPU Compute (`VECTORIZED_GROUPED_MM` / `COMPILED_VECTORIZED_GROUPED_MM`):** **Local-Shard Layer-Scaled 64-Expert MoE + GQA Operator Microbenchmark** (`run_child_hy3_worker` in [`scripts/run_hunyuan_image3_tpu_bench.py`](../../scripts/run_hunyuan_image3_tpu_bench.py)) loading `165 GiB / tp_ep_size` real `tencent/HunyuanImage-3.0` `safetensors` shards onto HBM and timing `4` measured prefill/diffusion layers (`× 8 -> 32L`) plus `8` measured CoT decode layers (`× 4 -> 32L`) over `64 // tp_ep_size = 16` local experts (`torch.bmm`) **excluding inter-chip EP `AllToAll` / TP `AllReduce` collectives**.
-> - **Disaggregated Image Encoding & TI2I Preprocessing (`POST /encode_image`, `POST /preprocess_vision`):** **100% Real End-to-End HTTP + AVX-512 Pillow `PNG`/`WebP` Encoding & Vision Preprocessing** against `multimodal-cpu-offload-svc:8090` (`c3-standard-44`), achieving **`1.09x–1.29x` synchronous PNG speedup** on `v5p` while isolating TPU host CPUs from Pillow GIL contention.
+- **Updated (UTC):** `2026-11-06T13:00:45.205460+00:00`
+- **Hardware:** `2` hosts x `8` TPU cores/host = `16` total TPU cores
+- **Disaggregated CPU Offload Health:** `ok`
 
-### Slice `v7x-8` (`v7x`, `TP/EP=4 × DP=2`, `5` Verified Benchmark Points)
+Compares `COMPILED_VECTORIZED_GROUPED_MM` (`torch.compile(..., dynamic=False)`), `VECTORIZED_GROUPED_MM`, and `EAGER_MOE` across BF16 and hardware FP8 MXU (`torch._scaled_mm`), alongside PNG / multi-reference vision CPU offload ablation (`multimodal-cpu-offload-svc`).
 
-- **Raw Artifacts:** [`results/v7x-8/SUMMARY.md`](./SUMMARY.md) · [`results/v7x-8/summary.json`](./summary.json) *(updated `2026-11-02T20:11:00.222155+00:00`)*
-
-| Checkpoint Variant | MoE Kernel | Task & Resolution | Seq Tokens | Steps | Stage-1 CoT (s) | Stage-2 Step (ms) | Local PNG (ms) | Disagg PNG (ms) | E2E Local (s) | E2E Disagg (s) | Cluster Img/min |
-|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Direct-1024x1024` | `4,352` | `8` | `0.046` | `68.09` | `119.9` | **`146.6`** | `0.710` | **`0.737`** | **`162.82`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-ThinkRecaption-CoT-1024x1024` | `4,992` | `8` | `14.039` | `63.52` | `115.7` | **`144.3`** | `14.663` | **`14.692`** | **`8.17`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `4,608` | `8` | `9.243` | `63.79` | `106.9` | **`139.2`** | `9.860` | **`9.893`** | **`12.13`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `8,832` | `8` | `13.057` | `64.13` | `118.0` | **`193.9`** | `13.708` | **`13.790`** | **`8.70`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `20,864` | `8` | `13.309` | `194.85` | `465.6` | **`594.2`** | `15.334` | **`15.462`** | **`7.76`** |
+| Checkpoint | MoE Kernel | Precision | TP/EP | Cluster DP | Task | Res | Steps | Stage-1 CoT (s) | Diff Step (ms) | TPU E2E (s) | Local PNG (ms) | Disagg RTT (ms) | E2E Local (s) | E2E Disagg (s) | Cluster img/min (Disagg) | Status |
+|---|---|---|---:|---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `FP8_DYNAMIC` | `8` | `2` | `T2I-Direct-1024x1024` | `1024x1024` | `8` | 0.048 | 69.13 | 0.601 | 118.93 | 146.23 | 0.72 | 0.747 | 160.64 | `PASS` |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `FP8_DYNAMIC` | `8` | `2` | `T2I-ThinkRecaption-CoT-1024x1024` | `1024x1024` | `8` | 16.269 | 64.56 | 16.786 | 113.7 | 142.84 | 16.899 | 16.929 | 7.09 | `PASS` |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `FP8_DYNAMIC` | `8` | `2` | `T2I-Wide-1280x768` | `1280x768` | `8` | 11.312 | 63.11 | 11.817 | 110.23 | 134.01 | 11.927 | 11.951 | 10.04 | `PASS` |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `FP8_DYNAMIC` | `8` | `2` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `1024x1024` | `8` | 14.658 | 64.41 | 15.173 | 131.41 | 167.13 | 15.329 | 15.34 | 7.82 | `PASS` |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `FP8_DYNAMIC` | `8` | `2` | `T2I-UltraHD-2048x2048-LongSeq20K` | `2048x2048` | `8` | 14.594 | 196.7 | 16.168 | 448.47 | 570.64 | 16.617 | 16.739 | 7.17 | `PASS` |

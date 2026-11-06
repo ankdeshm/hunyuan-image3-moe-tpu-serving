@@ -168,17 +168,41 @@ Every table below is generated directly from the verified `PASS` records in [`re
 | `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `8,832` | `50` | `43.521` | `361.33` | `154.8` | **`151.3`** | `61.771` | **`61.765`** | **`7.77`** |
 | `HunyuanImage-3-Instruct` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `20,864` | `50` | `43.362` | `1,303.95` | `617.9` | **`584.7`** | `109.177` | **`109.144`** | **`4.40`** |
 
-### Slice `v7x-8` (`v7x`, `TP/EP=4 × DP=2`, `5` Verified Benchmark Points)
+### Slice `v7x-spot-4c` (`v7x`, `TP/EP=8 × DP=1`, `5` Verified Benchmark Points)
 
-- **Raw Artifacts:** [`results/v7x-8/SUMMARY.md`](./results/v7x-8/SUMMARY.md) · [`results/v7x-8/summary.json`](./results/v7x-8/summary.json) *(updated `2026-11-02T20:11:00.222155+00:00`)*
+- **Raw Artifacts:** [`results/v7x-spot-4c/SUMMARY.md`](./results/v7x-spot-4c/SUMMARY.md) · [`results/v7x-spot-4c/summary.json`](./results/v7x-spot-4c/summary.json) *(updated `2026-11-06T12:54:14.436490+00:00`)*
 
 | Checkpoint Variant | MoE Kernel | Task & Resolution | Seq Tokens | Steps | Stage-1 CoT (s) | Stage-2 Step (ms) | Local PNG (ms) | Disagg PNG (ms) | E2E Local (s) | E2E Disagg (s) | Cluster Img/min |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Direct-1024x1024` | `4,352` | `8` | `0.046` | `68.09` | `119.9` | **`146.6`** | `0.710` | **`0.737`** | **`162.82`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-ThinkRecaption-CoT-1024x1024` | `4,992` | `8` | `14.039` | `63.52` | `115.7` | **`144.3`** | `14.663` | **`14.692`** | **`8.17`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `4,608` | `8` | `9.243` | `63.79` | `106.9` | **`139.2`** | `9.860` | **`9.893`** | **`12.13`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `8,832` | `8` | `13.057` | `64.13` | `118.0` | **`193.9`** | `13.708` | **`13.790`** | **`8.70`** |
-| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `20,864` | `8` | `13.309` | `194.85` | `465.6` | **`594.2`** | `15.334` | **`15.462`** | **`7.76`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Direct-1024x1024` | `0` | `8` | `0.047` | `68.49` | `119.4` | **`147.1`** | `0.715` | **`0.742`** | **`80.86`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-ThinkRecaption-CoT-1024x1024` | `0` | `8` | `15.129` | `62.05` | `114.2` | **`143.0`** | `15.740` | **`15.769`** | **`3.80`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `0` | `8` | `9.505` | `64.72` | `108.2` | **`134.2`** | `10.131` | **`10.157`** | **`5.91`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `0` | `8` | `14.326` | `65.58` | `113.5` | **`167.7`** | `14.987` | **`15.019`** | **`3.99`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `0` | `8` | `14.449` | `194.96` | `456.3` | **`577.6`** | `16.465` | **`16.586`** | **`3.62`** |
+
+### Slice `v7x-8` (`v7x`, `TP/EP=8 × DP=2`, `5` Verified Benchmark Points)
+
+- **Raw Artifacts:** [`results/v7x-8/SUMMARY.md`](./results/v7x-8/SUMMARY.md) · [`results/v7x-8/summary.json`](./results/v7x-8/summary.json) *(updated `2026-11-06T13:00:45.205460+00:00`)*
+
+| Checkpoint Variant | MoE Kernel | Task & Resolution | Seq Tokens | Steps | Stage-1 CoT (s) | Stage-2 Step (ms) | Local PNG (ms) | Disagg PNG (ms) | E2E Local (s) | E2E Disagg (s) | Cluster Img/min |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Direct-1024x1024` | `0` | `8` | `0.048` | `69.13` | `118.9` | **`146.2`** | `0.720` | **`0.747`** | **`160.64`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-ThinkRecaption-CoT-1024x1024` | `0` | `8` | `16.269` | `64.56` | `113.7` | **`142.8`** | `16.899` | **`16.929`** | **`7.09`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `0` | `8` | `11.312` | `63.11` | `110.2` | **`134.0`** | `11.927` | **`11.951`** | **`10.04`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `0` | `8` | `14.658` | `64.41` | `131.4` | **`167.1`** | `15.329` | **`15.340`** | **`7.82`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `0` | `8` | `14.594` | `196.70` | `448.5` | **`570.6`** | `16.617` | **`16.739`** | **`7.17`** |
+
+### Slice `v7x-16` (`v7x`, `TP/EP=8 × DP=4`, `5` Verified Benchmark Points)
+
+- **Raw Artifacts:** [`results/v7x-16/SUMMARY.md`](./results/v7x-16/SUMMARY.md) · [`results/v7x-16/summary.json`](./results/v7x-16/summary.json) *(updated `2026-11-03T09:42:48.906757+00:00`)*
+
+| Checkpoint Variant | MoE Kernel | Task & Resolution | Seq Tokens | Steps | Stage-1 CoT (s) | Stage-2 Step (ms) | Local PNG (ms) | Disagg PNG (ms) | E2E Local (s) | E2E Disagg (s) | Cluster Img/min |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Direct-1024x1024` | `0` | `8` | `0.045` | `70.02` | `118.8` | **`146.0`** | `0.724` | **`0.751`** | **`319.57`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-ThinkRecaption-CoT-1024x1024` | `0` | `8` | `16.674` | `66.33` | `114.5` | **`142.8`** | `17.319` | **`17.347`** | **`13.84`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-Wide-1280x768` | `0` | `8` | `8.956` | `64.79` | `107.5` | **`133.8`** | `9.582` | **`9.608`** | **`24.98`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `TI2I-MultiImageEdit-2Refs-1024x1024` | `0` | `8` | `13.569` | `62.47` | `118.2` | **`167.2`** | `14.208` | **`14.236`** | **`16.86`** |
+| `HunyuanImage-3-Instruct-Distil` | `VECTORIZED_GROUPED_MM` | `T2I-UltraHD-2048x2048-LongSeq20K` | `0` | `8` | `13.336` | `195.58` | `465.2` | **`568.4`** | `15.366` | **`15.469`** | **`15.51`** |
 
 ---
 
